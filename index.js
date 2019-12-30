@@ -23,6 +23,7 @@ class Search extends PureComponent {
     this.state = {
       keyword: props.defaultValue,
       expanded: false,
+      testID: 'search_input_control'
     };
     const { width } = Dimensions.get('window');
     this.contentWidth = width;
@@ -60,7 +61,7 @@ class Search extends PureComponent {
      */
     this.placeholder = this.props.placeholder || 'Search';
     this.cancelTitle = this.props.cancelTitle || 'Cancel';
-    this.autoFocus =  this.props.autoFocus || false;
+    this.autoFocus = this.props.autoFocus || false;
 
     /**
      * Shadow
@@ -72,8 +73,8 @@ class Search extends PureComponent {
   }
 
   componentDidMount() {
-    if(this.autoFocus) {
-      this.setState({expanded: true})
+    if (this.autoFocus) {
+      this.setState({ expanded: true })
       this.refs.input_keyword._component.focus();
 
     }
@@ -225,15 +226,15 @@ class Search extends PureComponent {
         }).start(),
         this.props.keyboardShouldPersist === false
           ? Animated.timing(this.inputFocusPlaceholderAnimated, {
-              toValue: this.middleWidth - this.props.placeholderCollapsedMargin,
-              duration: 200
-            }).start()
+            toValue: this.middleWidth - this.props.placeholderCollapsedMargin,
+            duration: 200
+          }).start()
           : null,
         this.props.keyboardShouldPersist === false || isForceAnim === true
           ? Animated.timing(this.iconSearchAnimated, {
-              toValue: this.middleWidth - this.props.searchIconCollapsedMargin,
-              duration: 200
-            }).start()
+            toValue: this.middleWidth - this.props.searchIconCollapsedMargin,
+            duration: 200
+          }).start()
           : null,
         Animated.timing(this.iconDeleteAnimated, {
           toValue: 0,
@@ -264,6 +265,7 @@ class Search extends PureComponent {
         onLayout={this.onLayout}
       >
         <AnimatedTextInput
+          testID='animated_text_input'
           ref="input_keyword"
           style={[
             styles.input,
@@ -302,20 +304,19 @@ class Search extends PureComponent {
           blurOnSubmit={this.props.blurOnSubmit}
           returnKeyType={this.props.returnKeyType || 'search'}
           keyboardType={this.props.keyboardType || 'default'}
-          keyboardAppearance={this.props.keyboardAppearance || 'default'}
           autoCapitalize={this.props.autoCapitalize}
           onFocus={this.onFocus}
           underlineColorAndroid="transparent"
           accessibilityTraits="search"
         />
-        <TouchableWithoutFeedback onPress={this.onFocus}>
-        {this.props.iconSearch
-          ? <Animated.View
+        <TouchableWithoutFeedback testID='search_potential_touchable' onPress={this.onFocus}>
+          {this.props.iconSearch
+            ? <Animated.View
               style={[styles.iconSearch, { left: this.iconSearchAnimated }]}
             >
               {this.props.iconSearch}
             </Animated.View>
-          : <Animated.Image
+            : <Animated.Image
               source={require('./img/search.png')}
               style={[
                 styles.iconSearch,
@@ -328,34 +329,34 @@ class Search extends PureComponent {
                 }
               ]}
             />}
-          </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
         {this.props.useClearButton && <TouchableWithoutFeedback onPress={this.onDelete}>
           {this.props.iconDelete
             ? <Animated.View
-                style={[
-                  styles.iconDelete,
-                  this.props.positionRightDelete && {
-                    [isRtl ? 'left' : 'right']: this.props.positionRightDelete
-                  },
-                  { opacity: this.iconDeleteAnimated }
-                ]}
-              >
-                {this.props.iconDelete}
-              </Animated.View>
+              style={[
+                styles.iconDelete,
+                this.props.positionRightDelete && {
+                  [isRtl ? 'left' : 'right']: this.props.positionRightDelete
+                },
+                { opacity: this.iconDeleteAnimated }
+              ]}
+            >
+              {this.props.iconDelete}
+            </Animated.View>
             : <Animated.Image
-                source={require('./img/delete.png')}
-                style={[
-                  styles.iconDelete,
-                  styles.iconDeleteDefault,
-                  this.props.tintColorDelete && {
-                    tintColor: this.props.tintColorDelete
-                  },
-                  this.props.positionRightDelete && {
-                    [isRtl ? 'left' : 'right']: this.props.positionRightDelete
-                  },
-                  { opacity: this.iconDeleteAnimated }
-                ]}
-              />}
+              source={require('./img/delete.png')}
+              style={[
+                styles.iconDelete,
+                styles.iconDeleteDefault,
+                this.props.tintColorDelete && {
+                  tintColor: this.props.tintColorDelete
+                },
+                this.props.positionRightDelete && {
+                  [isRtl ? 'left' : 'right']: this.props.positionRightDelete
+                },
+                { opacity: this.iconDeleteAnimated }
+              ]}
+            />}
         </TouchableWithoutFeedback>}
 
         <TouchableOpacity onPress={this.onCancel}>
@@ -368,6 +369,7 @@ class Search extends PureComponent {
             ]}
           >
             <Text
+              testID='cancel_text'
               style={[
                 styles.cancelButtonText,
                 this.props.titleCancelColor && {
@@ -389,7 +391,7 @@ class Search extends PureComponent {
 const getStyles = (inputHeight, isRtl) => {
   let middleHeight = 20
   if (typeof inputHeight == 'number')
-  middleHeight = (10 + inputHeight) / 2;
+    middleHeight = (10 + inputHeight) / 2;
 
   return {
     container: {
@@ -455,6 +457,7 @@ Search.propTypes = {
    * return a Promise
    * beforeFocus, onFocus, afterFocus
    */
+  testID: PropTypes.string,
   beforeFocus: PropTypes.func,
   onFocus: PropTypes.func,
   afterFocus: PropTypes.func,
@@ -526,7 +529,6 @@ Search.propTypes = {
   iconSearch: PropTypes.object,
   returnKeyType: PropTypes.string,
   keyboardType: PropTypes.string,
-  keyboardAppearance: PropTypes.string,
   autoCapitalize: PropTypes.string,
   inputHeight: PropTypes.number,
   inputBorderRadius: PropTypes.number,
